@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { CardPokemon } from '~/components/CardPokemon';
 import { Loading } from '~/components/Loading';
+import { usePokemonByName } from '~/hooks/usePokemonByName';
 import { usePokemons } from '~/hooks/usePokemons';
 import { ButtonFilter, Container, InputContent, List, Section } from './styles';
 
@@ -12,6 +13,8 @@ export function Pokemons() {
       return [...acc, ...page.pokemons];
     }, []);
   }, [data]);
+
+  usePokemonByName('pikachu');
 
   return (
     <Container>
