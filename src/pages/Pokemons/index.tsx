@@ -1,9 +1,17 @@
+import { useMemo } from 'react';
 import { CardPokemon } from '~/components/CardPokemon';
+import { Loading } from '~/components/Loading';
 import { usePokemons } from '~/hooks/usePokemons';
-import { ButtonFilter, Container, InputContent, List, Section } from './styles';
+import { ButtonFilter, Container, InputContent, List, LoadingContainer, Section } from './styles';
 
 export function Pokemons() {
-  const { data, isFetching } = usePokemons();
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = usePokemons();
+
+  const pokemons = useMemo(() => {
+    return data?.pages?.reduce((acc, page) => {
+      return [...acc, ...page.pokemons];
+    }, []);
+  }, [data]);
 
   return (
     <Container>
@@ -25,15 +33,20 @@ export function Pokemons() {
         </div>
       </Section>
 
-      {isFetching ? (
-        <span>Loading...</span>
-      ) : (
-        <List>
-          {data?.results?.map((pokemon) => (
-            <CardPokemon {...pokemon} key={pokemon.id} />
-          ))}
-        </List>
-      )}
+      <List
+        dataLength={pokemons?.length || 0}
+        next={isFetchingNextPage ? () => {} : fetchNextPage}
+        hasMore={hasNextPage || false}
+        loader={
+          <LoadingContainer>
+            <Loading />
+          </LoadingContainer>
+        }
+      >
+        {pokemons?.map((pokemon) => (
+          <CardPokemon {...pokemon} key={pokemon.id} />
+        ))}
+      </List>
     </Container>
   );
 }

@@ -1,3 +1,4 @@
+import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from 'styled-components';
 
 export const Container = styled.main`
@@ -110,7 +111,7 @@ export const ButtonFilter = styled.button`
   }
 `;
 
-export const List = styled.section`
+export const List = styled(InfiniteScroll)`
   width: 100%;
 
   display: flex;
@@ -118,4 +119,13 @@ export const List = styled.section`
   justify-content: center;
   flex-wrap: wrap;
   gap: 3rem;
+
+  padding: 2rem 0;
+`;
+
+export const LoadingContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

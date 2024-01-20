@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 interface Props {
-  variant: string;
+  $variant: string;
 }
 
 export const Container = styled.div<Props>`
   width: 34.5rem;
 
-  background-color: ${({ theme, variant }) => theme[`background-type-${variant}`]};
+  background-color: ${({ theme, $variant }) => theme[`background-type-${$variant}`]};
 
   border-radius: 1rem;
 
@@ -81,7 +81,7 @@ export const Badge = styled.div<Props>`
 
   padding: 0.8rem;
 
-  background-color: ${({ theme, variant }) => theme[`type-${variant}`]};
+  background-color: ${({ theme, $variant }) => theme[`type-${$variant}`]};
 
   border-radius: 0.4rem;
 
