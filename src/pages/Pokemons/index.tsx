@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { CardPokemon } from '~/components/CardPokemon';
 import { Loading } from '~/components/Loading';
 import { usePokemons } from '~/hooks/usePokemons';
-import { ButtonFilter, Container, InputContent, List, LoadingContainer, Section } from './styles';
+import { ButtonFilter, Container, InputContent, List, Section } from './styles';
 
 export function Pokemons() {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = usePokemons();
@@ -37,11 +37,7 @@ export function Pokemons() {
         dataLength={pokemons?.length || 0}
         next={isFetchingNextPage ? () => {} : fetchNextPage}
         hasMore={hasNextPage || false}
-        loader={
-          <LoadingContainer>
-            <Loading />
-          </LoadingContainer>
-        }
+        loader={<Loading />}
       >
         {pokemons?.map((pokemon) => (
           <CardPokemon {...pokemon} key={pokemon.id} />
