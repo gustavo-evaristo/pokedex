@@ -20,7 +20,12 @@ export function Pokemons() {
     }, []);
   }, [data]);
 
-  const { refetch } = usePokemonByName(query?.name);
+  const {
+    refetch,
+    data: pokemon,
+    isFetched: isFetchedPokemon,
+    isFetching: isFetchingPokemon,
+  } = usePokemonByName(query?.name);
 
   const handleDebounceSearch = useCallback((e) => {
     debounceSearch(e);
@@ -32,6 +37,10 @@ export function Pokemons() {
       name: e?.target?.value,
     }));
   }, 1000);
+
+  const showFindedPokemon = query?.name?.length > 0 && isFetchedPokemon && !!pokemon?.id;
+
+  const showPokemonList = !showFindedPokemon && !isFetchingPokemon;
 
   useEffect(() => {
     if (query?.name) {
@@ -59,16 +68,22 @@ export function Pokemons() {
         </div>
       </Section>
 
-      <List
-        dataLength={pokemons?.length || 0}
-        next={isFetchingNextPage ? () => {} : fetchNextPage}
-        hasMore={hasNextPage || false}
-        loader={<Loading />}
-      >
-        {pokemons?.map((pokemon) => (
-          <CardPokemon {...pokemon} key={pokemon.id} />
-        ))}
-      </List>
+      {isFetchingPokemon && <Loading />}
+
+      {showFindedPokemon && <CardPokemon {...pokemon} />}
+
+      {showPokemonList && (
+        <List
+          dataLength={pokemons?.length || 0}
+          next={isFetchingNextPage ? () => {} : fetchNextPage}
+          hasMore={hasNextPage || false}
+          loader={<Loading />}
+        >
+          {pokemons?.map((pokemon) => (
+            <CardPokemon {...pokemon} key={pokemon.id} />
+          ))}
+        </List>
+      )}
     </Container>
   );
 }

@@ -1,4 +1,6 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { ThemeProvider } from 'styled-components';
 import { Routes } from './routes';
 import { GlobalStyles } from './styles/global';
@@ -18,6 +20,7 @@ export function App() {
       <ThemeProvider theme={theme}>
         <GlobalStyles />
         <Routes />
+        <ToastContainer />
       </ThemeProvider>
     </QueryClientProvider>
   );
