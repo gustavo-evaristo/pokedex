@@ -1,11 +1,17 @@
-import { useMemo } from 'react';
+import { debounce } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CardPokemon } from '~/components/CardPokemon';
 import { Loading } from '~/components/Loading';
 import { usePokemonByName } from '~/hooks/usePokemonByName';
 import { usePokemons } from '~/hooks/usePokemons';
 import { ButtonFilter, Container, InputContent, List, Section } from './styles';
 
+interface Query {
+  name: string;
+}
+
 export function Pokemons() {
+  const [query, setQuery] = useState({} as Query);
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = usePokemons();
 
   const pokemons = useMemo(() => {
@@ -14,7 +20,24 @@ export function Pokemons() {
     }, []);
   }, [data]);
 
-  usePokemonByName('pikachu');
+  const { refetch } = usePokemonByName(query?.name);
+
+  const handleDebounceSearch = useCallback((e) => {
+    debounceSearch(e);
+  }, []);
+
+  const debounceSearch = debounce((e) => {
+    setQuery((state) => ({
+      ...state,
+      name: e?.target?.value,
+    }));
+  }, 1000);
+
+  useEffect(() => {
+    if (query?.name) {
+      refetch();
+    }
+  }, [query]);
 
   return (
     <Container>
@@ -27,7 +50,7 @@ export function Pokemons() {
         <div>
           <InputContent>
             <img src="/svg/search-icon.svg" alt="Buscar" />
-            <input placeholder="Digite o nome" type="text" />
+            <input placeholder="Digite o nome" type="text" onChange={handleDebounceSearch} />
           </InputContent>
 
           <ButtonFilter>
