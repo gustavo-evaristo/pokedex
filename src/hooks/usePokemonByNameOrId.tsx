@@ -2,11 +2,11 @@ import { useQuery } from 'react-query';
 import { findPokemon } from '~/api/pokemon.api';
 import { toast } from '~/utils/toast';
 
-export function usePokemonByName(name: string) {
+export function usePokemonByNameOrId(param: string) {
   return useQuery<Pokemon>(
-    ['findPokemon', name],
+    ['findPokemon', param],
     async () => {
-      const { id, sprites, types } = await findPokemon(name);
+      const { id, name, sprites, types } = await findPokemon(param);
 
       const image =
         sprites?.other?.['official-artwork']?.front_default ||

@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CardPokemon } from '~/components/CardPokemon';
 import { Loading } from '~/components/Loading';
 import { Modal } from '~/components/Modal';
-import { usePokemonByName } from '~/hooks/usePokemonByName';
+import { usePokemonByNameOrId } from '~/hooks/usePokemonByNameOrId';
 import { usePokemons } from '~/hooks/usePokemons';
 import { ButtonFilter, Container, InputContent, List, Section } from './styles';
 
@@ -55,7 +55,7 @@ export function Pokemons() {
     data: pokemon,
     isFetched: isFetchedPokemon,
     isFetching: isFetchingPokemon,
-  } = usePokemonByName(query?.name?.toLowerCase());
+  } = usePokemonByNameOrId(query?.name?.toLowerCase());
 
   const handleDebounceSearch = useCallback((e) => {
     debounceSearch(e);
@@ -92,13 +92,13 @@ export function Pokemons() {
       <Section>
         <div>
           <h1>Pokédex</h1>
-          <h6>Busque Pokémons por nome ou tipo</h6>
+          <h6>Busque Pokémons por nome, id ou tipo</h6>
         </div>
 
         <div>
           <InputContent>
             <img src="/svg/search-icon.svg" alt="Buscar" />
-            <input placeholder="Digite o nome" type="text" onChange={handleDebounceSearch} />
+            <input placeholder="Digite o nome ou id" type="text" onChange={handleDebounceSearch} />
           </InputContent>
 
           <ButtonFilter onClick={handleModal}>
