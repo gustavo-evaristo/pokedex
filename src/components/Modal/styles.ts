@@ -1,22 +1,67 @@
-import Modal from 'react-modal';
+import { IoMdCloseCircleOutline } from 'react-icons/io';
 import styled, { css } from 'styled-components';
 
 interface Type {
-  $variant: string;
   $isSelected?: boolean;
 }
 
-export const Container = styled(Modal)`
+export const Container = styled.div`
+  position: fixed;
+
+  cursor: pointer;
+
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+
+  background-color: rgba(0, 0, 0, 0.9);
+
+  backdrop-filter: blur(5px);
+
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+
+  &.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+`;
+
+export const Content = styled.div`
   width: 100%;
   height: 100%;
-  outline: none;
-  background-color: #fff;
+
+  @media (min-width: 760px) {
+    max-width: 70rem;
+    max-height: 50rem;
+
+    border-radius: 3rem;
+  }
+
+  background-color: ${({ theme }) => theme['background-white']};
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
   padding: 3rem 4rem;
+
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  &.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
 
   & h4 {
     color: ${({ theme }) => theme['text-black']};
@@ -37,21 +82,19 @@ export const Container = styled(Modal)`
     font-weight: 700;
     margin-bottom: 0.5rem;
   }
+`;
 
-  button {
-    font-size: 1.6rem;
-    font-weight: 400;
-    color: ${({ theme }) => theme['text-white']};
+export const IconContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+`;
 
-    background-color: ${({ theme }) => theme['type-psychic']};
-    box-shadow: 0px 10px 20px 0px ${({ theme }) => `${theme['type-psychic']}30`};
-    border-radius: 10px;
-
-    width: 100%;
-
-    border: none;
-    padding: 2rem 3rem;
-  }
+export const CloseIcon = styled(IoMdCloseCircleOutline).attrs({
+  size: 20,
+})`
+  cursor: pointer;
 `;
 
 export const Types = styled.div`
@@ -68,25 +111,57 @@ export const Type = styled.div<Type>`
 
   cursor: pointer;
 
-  background-color: ${({ theme, $variant, $isSelected }) =>
-    theme[$isSelected ? `type-${$variant}` : 'background-white']};
-
   border-radius: 100px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  ${({ $isSelected, $variant, theme }) =>
+  background-color: ${({ theme }) => theme['background-white']};
+
+  transition: 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0px 10px 20px 0px rgba(157, 160, 170, 0.3);
+  }
+
+  ${({ $isSelected }) =>
     $isSelected &&
     css`
-      background-color: ${theme[`type-${$variant}`]};
-
-      box-shadow: 0px 0px 20px 0px ${`${theme[`type-${$variant}`]}50`};
+      box-shadow: 0px 10px 20px 0px rgba(157, 160, 170, 0.3);
     `}
 
   & img {
     width: 2.5rem;
     height: 2.5rem;
+  }
+`;
+
+export const Buttons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  button {
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: ${({ theme }) => theme['text-white']};
+
+    background-color: ${({ theme }) => theme['type-psychic']};
+    border-radius: 10px;
+
+    width: 100%;
+
+    border: none;
+    padding: 2rem 3rem;
+  }
+
+  & button:first-child {
+    background-color: ${({ theme }) => theme['background-default-input']};
+    color: ${({ theme }) => theme['text-gray']};
+  }
+
+  & button:last-child {
+    box-shadow: 0px 10px 20px 0px rgba(234, 93, 96, 0.3);
   }
 `;

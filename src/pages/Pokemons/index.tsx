@@ -13,9 +13,36 @@ interface Query {
 
 export function Pokemons() {
   const [query, setQuery] = useState({} as Query);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = usePokemons();
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleSelectType = useCallback(
+    (type: string) => {
+      const typeAlreadySelected = selectedTypes.includes(type);
+
+      if (typeAlreadySelected) {
+        const newTypes = selectedTypes.filter((state) => state !== type);
+
+        return setSelectedTypes(newTypes);
+      }
+
+      return setSelectedTypes((state) => [type, ...state]);
+    },
+    [selectedTypes],
+  );
+
+  function handleModal() {
+    setShowModal((state) => !state);
+  }
+
+  function handleConfirm() {
+    return handleModal();
+  }
+
+  function handleReset() {
+    return handleModal();
+  }
 
   const pokemons = useMemo(() => {
     return data?.pages?.reduce((acc, page) => {
@@ -28,7 +55,7 @@ export function Pokemons() {
     data: pokemon,
     isFetched: isFetchedPokemon,
     isFetching: isFetchingPokemon,
-  } = usePokemonByName(query?.name);
+  } = usePokemonByName(query?.name?.toLowerCase());
 
   const handleDebounceSearch = useCallback((e) => {
     debounceSearch(e);
@@ -45,16 +72,6 @@ export function Pokemons() {
 
   const showPokemonList = !showFindedPokemon && !isFetchingPokemon;
 
-  function handleSelectType(type: string) {
-    if (selectedTypes.includes(type)) {
-      const newTypes = selectedTypes.filter((state) => state !== type);
-
-      return setSelectedTypes(newTypes);
-    }
-
-    return setSelectedTypes((state) => [type, ...state]);
-  }
-
   useEffect(() => {
     if (query?.name) {
       refetch();
@@ -63,7 +80,14 @@ export function Pokemons() {
 
   return (
     <Container>
-      <Modal handleSelectType={handleSelectType} selectedTypes={selectedTypes} />
+      <Modal
+        handleSelectType={handleSelectType}
+        selectedTypes={selectedTypes}
+        handleClose={handleModal}
+        visible={showModal}
+        handleConfirm={handleConfirm}
+        handleReset={handleReset}
+      />
 
       <Section>
         <div>
@@ -77,7 +101,7 @@ export function Pokemons() {
             <input placeholder="Digite o nome" type="text" onChange={handleDebounceSearch} />
           </InputContent>
 
-          <ButtonFilter>
+          <ButtonFilter onClick={handleModal}>
             <img src="/svg/filter-light.svg" alt="Filtrar pokemons" />
           </ButtonFilter>
         </div>

@@ -48,4 +48,8 @@ export const GlobalStyles = createGlobalStyle`
   button, a {
     cursor: pointer;
   }
+
+  .modal-open {
+    overflow: hidden;
+}
 `;
