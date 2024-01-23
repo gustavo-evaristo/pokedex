@@ -2,6 +2,7 @@ import { debounce } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CardPokemon } from '~/components/CardPokemon';
 import { Loading } from '~/components/Loading';
+import { Modal } from '~/components/Modal';
 import { usePokemonByName } from '~/hooks/usePokemonByName';
 import { usePokemons } from '~/hooks/usePokemons';
 import { ButtonFilter, Container, InputContent, List, Section } from './styles';
@@ -12,6 +13,8 @@ interface Query {
 
 export function Pokemons() {
   const [query, setQuery] = useState({} as Query);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = usePokemons();
 
   const pokemons = useMemo(() => {
@@ -42,6 +45,16 @@ export function Pokemons() {
 
   const showPokemonList = !showFindedPokemon && !isFetchingPokemon;
 
+  function handleSelectType(type: string) {
+    if (selectedTypes.includes(type)) {
+      const newTypes = selectedTypes.filter((state) => state !== type);
+
+      return setSelectedTypes(newTypes);
+    }
+
+    return setSelectedTypes((state) => [type, ...state]);
+  }
+
   useEffect(() => {
     if (query?.name) {
       refetch();
@@ -50,6 +63,8 @@ export function Pokemons() {
 
   return (
     <Container>
+      <Modal handleSelectType={handleSelectType} selectedTypes={selectedTypes} />
+
       <Section>
         <div>
           <h1>Pokédex</h1>
